@@ -73,7 +73,7 @@ public class ChatClient {
 		// Remote method invocation
 		try {
 			room = hub.GetChatRoom(number);
-		} catch (RemoteException e) {
+		} catch (Exception e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
 	}
@@ -82,7 +82,7 @@ public class ChatClient {
 		// Remote method invocation
 		try {
 			room = hub.NewChatRoom();
-		} catch (RemoteException e) {
+		} catch (Exception e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
 	}
@@ -92,7 +92,7 @@ public class ChatClient {
 		try {
 			hub.RemoveChatRoom(room);
 			room = null;
-		} catch (RemoteException e) {
+		} catch (Exception e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
 	}
