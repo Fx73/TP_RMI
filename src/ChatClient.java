@@ -129,6 +129,7 @@ class Frame extends JFrame {
 
 		//Zone de dialogue
 		_chattextarea.setEditable(false);
+		_chattextarea.setLineWrap(true);
 		final JSplitPaneWithZeroSizeDivider textpane = new JSplitPaneWithZeroSizeDivider(JSplitPane.VERTICAL_SPLIT,new JScrollPane(_chattextarea),chatpane);
 		textpane.setResizeWeight(1);
 

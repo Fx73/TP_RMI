@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class ChatHub implements Hub {
 
-    private final ArrayList<Room> chatlist = new ArrayList<>();
+    private final ArrayList<ChatRoom> chatlist = new ArrayList<>();
 
 
     @Override
@@ -12,13 +12,13 @@ public class ChatHub implements Hub {
     }
 
     @Override
-    public Room GetChatRoom(int id) throws RemoteException {
+    public ChatRoom GetChatRoom(int id) throws RemoteException {
         return chatlist.get(id);
     }
 
     @Override
-    public Room NewChatRoom() throws RemoteException {
-        Room newchat = new ChatRoom("");
+    public ChatRoom NewChatRoom() throws RemoteException {
+        ChatRoom newchat = new ChatRoom("");
         chatlist.add(newchat);
         return newchat;
     }
