@@ -1,6 +1,6 @@
 import java.rmi.RemoteException;
 
-public class ChatRoom implements Chat{
+public class ChatRoom implements Room {
     String _chatlog;
     ChatRoom(String chatlog){
         _chatlog = chatlog;
