@@ -154,7 +154,7 @@ class Frame extends JFrame {
 		final JButton buttonplus = new JButton("+");
 		buttonplus.addActionListener(e->ChatClient.Create_Room());
 		final JButton buttonmoins = new JButton("-");
-		buttonplus.addActionListener(e->ChatClient.Delete_Room());
+		buttonmoins.addActionListener(e->ChatClient.Delete_Room());
 		final JSplitPaneWithZeroSizeDivider toolpane = new JSplitPaneWithZeroSizeDivider(JSplitPane.HORIZONTAL_SPLIT,buttonplus,buttonmoins);
 		toolpane.setResizeWeight(0.5);
 
@@ -177,6 +177,8 @@ class Frame extends JFrame {
 	private int buttonnumber = 0;
 	public void UpdateButtons(int number){
 		if(buttonnumber == number) return;
+		roombuttoncontainer.removeAll();
+
 		for (int i = 0; i < number; i++) {
 			JPanel p = new JPanel();
 			p.setLayout(new BorderLayout());
@@ -190,6 +192,7 @@ class Frame extends JFrame {
 			roombuttoncontainer.add(p);
 		}
 		buttonnumber = number;
+		pack();
 	}
 
 	MouseListener nommouselistener = new MouseListener() {
