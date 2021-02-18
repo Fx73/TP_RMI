@@ -10,7 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ChatClient {
-	static Room room = null;
+	static ChatRoom room = null;
 	static Hub hub;
 
 	public static void main(String[] args) {
