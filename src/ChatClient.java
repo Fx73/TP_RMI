@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.rmi.RemoteException;
 import java.rmi.registry.*;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -34,12 +36,20 @@ public class ChatClient {
 
   static void Update(){
 	  // Remote method invocation
-	  Frame.getWindow().set_chattextarea(chat.Get_chatlog());
+	  try {
+		  Frame.getWindow().set_chattextarea(chat.Get_chatlog());
+	  } catch (RemoteException e) {
+		  Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
+	  }
   }
 
   static void Say(String text){
 	  // Remote method invocation
-	  chat.Say(System.getProperty("user.name"),text);
+	  try {
+		  chat.Say(System.getProperty("user.name"),text);
+	  } catch (RemoteException e) {
+		  Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
+	  }
   }
 
 }
