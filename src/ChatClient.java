@@ -37,7 +37,7 @@ public class ChatClient {
 				public void run() {
 					Update();
 				}
-			}, 1000, 4000);
+			}, 1000, 10000);
 
 
 		} catch (Exception e) {
@@ -59,9 +59,9 @@ public class ChatClient {
 				Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 			}
 		} else {
-			System.out.println("DIS UN TRUC");
 			Frame.getWindow().set_chattextarea("Select a room or start a new one");
 		}
+		Frame.getWindow().revalidate();
 	}
 
 	static void Say(String text) {
@@ -69,6 +69,7 @@ public class ChatClient {
 		// Remote method invocation
 		try {
 			room.Say(Frame.getWindow().nom.getText(), text);
+			Update();
 		} catch (RemoteException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
@@ -80,6 +81,7 @@ public class ChatClient {
 		try {
 			String roomuri = hub.GetChatRoomURL(name);
 			room = (Room) registry.lookup(roomuri);
+			Update();
 
 		} catch (RemoteException | NotBoundException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
@@ -102,11 +104,11 @@ public class ChatClient {
 		try {
 			String roomuri = hub.NewChatRoom(result);
 			room = (Room) registry.lookup(roomuri);
+			Update();
 
 		} catch (RemoteException | NotBoundException | AlreadyBoundException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
-		Update();
 	}
 
 	static void Delete_Room() {
@@ -114,10 +116,11 @@ public class ChatClient {
 		try {
 			hub.RemoveChatRoom(room.GetRoomName());
 			room = null;
+			Update();
+
 		} catch (RemoteException | NotBoundException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
-		Update();
 	}
 }
 class Frame extends JFrame {
@@ -192,14 +195,11 @@ class Frame extends JFrame {
 
 	public void set_chattextarea(String area){
 		_chattextarea.setText(area);
-		System.out.println("prout");
 	}
 
 	public String[] buttonlist = new String[0];
 	public void UpdateButtons(String[] newbuttonlist){
-		System.out.println("Update");
 		if(Arrays.equals(buttonlist,newbuttonlist)) return;
-		System.out.println(Arrays.toString(newbuttonlist));
 		roombuttoncontainer.removeAll();
 
 		for (int i = 0; i < newbuttonlist.length; i++) {
