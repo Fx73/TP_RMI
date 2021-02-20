@@ -45,6 +45,7 @@ public class ChatServer {
 				Registry registry= LocateRegistry.getRegistry();
 				registry.unbind("ChatService");
 				UnicastRemoteObject.unexportObject(hub, true);
+				Save();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
