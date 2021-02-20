@@ -203,7 +203,6 @@ class Frame extends JFrame {
 	}
 
 	public void set_chattextarea(String area){
-		System.out.println(area);
 		_chattextarea.setText(area);
 		Frame.getWindow().revalidate();
 	}
