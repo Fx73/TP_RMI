@@ -195,6 +195,7 @@ class Frame extends JFrame {
 
 	public String[] buttonlist = new String[0];
 	public void UpdateButtons(String[] newbuttonlist){
+		System.out.println("Update");
 		if(Arrays.equals(buttonlist,newbuttonlist)) return;
 		System.out.println(Arrays.toString(newbuttonlist));
 		roombuttoncontainer.removeAll();
