@@ -77,7 +77,7 @@ public class ChatServer {
 		  System.out.println("Successfully bound " + hub.namelist.size() + " saved rooms");
 	  }catch (RemoteException | NotBoundException | AlreadyBoundException e) {
 		  System.out.println("Error bounding saved room : " + hub.namelist.get(i));
-
+			e.printStackTrace();
 	  }
 
   }
