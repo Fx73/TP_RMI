@@ -105,7 +105,7 @@ public class ChatClient {
 			room = (Room) registry.lookup(roomuri);
 			Update();
 
-		} catch (RemoteException | NotBoundException | AlreadyBoundException e) {
+		} catch (RemoteException | NotBoundException | AlreadyBoundException | RoomAlreadyExistException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
 	}
