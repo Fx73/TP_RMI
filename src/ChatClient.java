@@ -18,15 +18,14 @@ public class ChatClient {
 
 	public static void main(String[] args) {
 		String host;
-		SwingUtilities.invokeLater(() -> Frame.getWindow().setVisible(true));
+		if (args.length < 1)
+			host = "localhost";
+		else
+			host = args[0];
+
+		SwingUtilities.invokeLater(() -> Frame.getWindow(host).setVisible(true));
 
 		try {
-			if (args.length < 1)
-				host = "localhost";
-			else
-				host = args[0];
-
-
 			// Get remote object reference
 			registry = LocateRegistry.getRegistry(host);
 			hub = (Hub) registry.lookup("ChatService");
@@ -126,7 +125,10 @@ public class ChatClient {
 class Frame extends JFrame {
 	private static Frame window = null;
 	public static Frame getWindow(){
-		return window == null? window = new Frame(): window;
+		return window == null? window = new Frame(""): window;
+	}
+	public static Frame getWindow(String name){
+		return window == null? window = new Frame(name): window;
 	}
 
 	private final JTextArea _chattextarea = new JTextArea();
@@ -135,8 +137,8 @@ class Frame extends JFrame {
 	public JTextField nom;
 
 
-	private Frame() {
-		super("RMI Chat");
+	private Frame(String target) {
+		super("RMI Chat : "+target);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setPreferredSize(new Dimension(1000,600));
 
