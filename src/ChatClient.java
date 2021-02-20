@@ -3,6 +3,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.*;
 import java.util.Arrays;
@@ -12,6 +14,7 @@ import java.util.TimerTask;
 public class ChatClient {
 	static ChatRoom room = null;
 	static Hub hub;
+	static Registry registry;
 
 	public static void main(String[] args) {
 		String host;
@@ -25,7 +28,7 @@ public class ChatClient {
 
 
 			// Get remote object reference
-			Registry registry = LocateRegistry.getRegistry(host);
+			registry = LocateRegistry.getRegistry(host);
 			hub = (Hub) registry.lookup("ChatService");
 
 			// Set up a timer for update
@@ -46,7 +49,7 @@ public class ChatClient {
 		// Remote method invocation
 		try {
 			System.out.println(hub.GetChatRoomNumber());
-			Frame.getWindow().UpdateButtons(hub.GetChatRoomNumber());
+			Frame.getWindow().UpdateButtons(hub.GetChatRoomNameList());
 		} catch (RemoteException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
@@ -72,20 +75,35 @@ public class ChatClient {
 		}
 	}
 
-	static void Select_Room(int number) {
+	static void Select_Room(String name) {
 		// Remote method invocation
 		try {
-			room = hub.GetChatRoom(number);
-		} catch (RemoteException e) {
+			String roomuri = hub.GetChatRoomURL(name);
+			hub = (Hub) registry.lookup(roomuri);
+
+		} catch (RemoteException | NotBoundException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
 	}
 
 	static void Create_Room() {
+        String result = (String)JOptionPane.showInputDialog(
+                Frame.getWindow(),
+                "Change your name",
+                "Name",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                Frame.getWindow().nom.getText()
+        );
+        if(result == null)
+            return;
 		// Remote method invocation
 		try {
-			room = hub.NewChatRoom();
-		} catch (RemoteException e) {
+			String roomuri = hub.NewChatRoom(result);
+			hub = (Hub) registry.lookup(roomuri);
+
+		} catch (RemoteException | NotBoundException | AlreadyBoundException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
 	}
@@ -93,7 +111,7 @@ public class ChatClient {
 	static void Delete_Room() {
 		// Remote method invocation
 		try {
-			hub.RemoveChatRoom(room);
+			hub.RemoveChatRoom(room.GetRoomName());
 			room = null;
 		} catch (RemoteException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
@@ -174,24 +192,24 @@ class Frame extends JFrame {
 		_chattextarea.setText(area);
 	}
 
-	private int buttonnumber = 0;
-	public void UpdateButtons(int number){
-		if(buttonnumber == number) return;
+	public String[] buttonlist = new String[0];
+	public void UpdateButtons(String[] newbuttonlist){
+		if(Arrays.equals(buttonlist,newbuttonlist)) return;
 		roombuttoncontainer.removeAll();
 
-		for (int i = 0; i < number; i++) {
+		for (int i = 0; i < newbuttonlist.length; i++) {
 			JPanel p = new JPanel();
 			p.setLayout(new BorderLayout());
 			p.setBorder(new EmptyBorder(new Insets(3, 0, 0, 0)));
 
 			JButton b = new JButton(String.valueOf(i));
 			int finalI = i;
-			b.addActionListener(e-> ChatClient.Select_Room(finalI));
+			b.addActionListener(e-> ChatClient.Select_Room(newbuttonlist[finalI]));
 
 			p.add(b);
 			roombuttoncontainer.add(p);
 		}
-		buttonnumber = number;
+		buttonlist = newbuttonlist;
 		pack();
 	}
 
