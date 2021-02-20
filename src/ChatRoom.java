@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
-public class ChatRoom implements Room {
+public class ChatRoom implements Room, Serializable {
     String _chatlog;
     String _name;
     ChatRoom(String name, String chatlog){
