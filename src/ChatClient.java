@@ -105,7 +105,7 @@ public class ChatClient {
 			room = (Room) registry.lookup(roomuri);
 			Update();
 
-		} catch (RemoteException | NotBoundException | AlreadyBoundException | RoomAlreadyExistException e) {
+		} catch (RemoteException | NotBoundException | AlreadyBoundException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
 	}
@@ -197,6 +197,7 @@ class Frame extends JFrame {
 
 	public void set_chattextarea(String area){
 		_chattextarea.setText(area);
+		Frame.getWindow().revalidate();
 	}
 
 	public String[] buttonlist = new String[0];

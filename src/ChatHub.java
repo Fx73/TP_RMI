@@ -28,9 +28,9 @@ public class ChatHub implements Hub {
     }
 
     @Override
-    public String NewChatRoom(String name) throws RemoteException, AlreadyBoundException, RoomAlreadyExistException {
+    public String NewChatRoom(String name) throws RemoteException, AlreadyBoundException {
         if(namelist.contains(name))
-            throw new RoomAlreadyExistException("A room already exists with name : " + name);
+            throw new AlreadyBoundException("A room already exists with name : " + name);
 
         ChatRoom newchat = new ChatRoom(name, "");
         chatlist.add(newchat);
@@ -50,9 +50,4 @@ public class ChatHub implements Hub {
         UnicastRemoteObject.unexportObject(chatlist.remove(namelist.indexOf(name)), true);
     }
 
-}
-class RoomAlreadyExistException extends Exception {
-    public RoomAlreadyExistException(String msg) {
-        super(msg);
-    }
 }
