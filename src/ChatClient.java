@@ -89,7 +89,8 @@ public class ChatClient {
 			Update();
 
 		} catch (RemoteException | NotBoundException e) {
-			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
+			e.printStackTrace();
+			//Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
 	}
 
