@@ -192,6 +192,7 @@ class Frame extends JFrame {
 
 	public void set_chattextarea(String area){
 		_chattextarea.setText(area);
+		System.out.println("prout");
 	}
 
 	public String[] buttonlist = new String[0];
