@@ -218,7 +218,7 @@ class Frame extends JFrame {
 			p.setBorder(new EmptyBorder(new Insets(3, 0, 0, 0)));
 
 			JButton b = new JButton(newbuttonlist[i]);
-			b.addActionListener(e-> ChatClient.Select_Room(((JButton)e.getSource()).getName()));
+			b.addActionListener(e-> ChatClient.Select_Room(((JButton)e.getSource()).getText()));
 
 			p.add(b);
 			roombuttoncontainer.add(p);
