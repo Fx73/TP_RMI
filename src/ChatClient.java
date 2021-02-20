@@ -59,6 +59,7 @@ public class ChatClient {
 				Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 			}
 		} else {
+			System.out.println("DIS UN TRUC");
 			Frame.getWindow().set_chattextarea("Select a room or start a new one");
 		}
 	}
