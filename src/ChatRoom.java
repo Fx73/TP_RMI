@@ -14,7 +14,7 @@ public class ChatRoom implements Room, Serializable {
     }
 
     public void Say(String name, String s) throws RemoteException {
-        _chatlog += "\n <" + name + ">\n\n" + s;
+        _chatlog += "\n <" + name + ">\n" + s+"\n";
     }
 
     public String Get_chatlog() throws RemoteException{
