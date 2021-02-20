@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -6,7 +7,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public class ChatHub implements Hub {
+public class ChatHub implements Hub, Serializable {
 
     private final ArrayList<String> namelist = new ArrayList<>();
     private final ArrayList<ChatRoom> chatlist = new ArrayList<>();

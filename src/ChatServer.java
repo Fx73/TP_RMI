@@ -1,28 +1,79 @@
 
+import java.io.*;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.server.*;
 import java.rmi.registry.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ChatServer {
-		static String _chatlog = "";
+	static ChatHub hub;
 
 
 
-  public static void  main(String [] args) {
+	public static void  main(String [] args) {
+		try {
+			FileInputStream fi = new FileInputStream("hubsave.txt");
+			ObjectInputStream oi = new ObjectInputStream(fi);
+
+			hub = (ChatHub) oi.readObject();
+
+			oi.close();
+			fi.close();
+		} catch (IOException | ClassNotFoundException e) {
+			hub = new ChatHub();
+		}
+
 
 		try {
 		  // Create a ChatRoom remote object
-	    ChatHub hub = new ChatHub ();
-	    Hub hub_stub = (Hub) UnicastRemoteObject.exportObject(hub, 0);
+	    	Hub hub_stub = (Hub) UnicastRemoteObject.exportObject(hub, 0);
 
-	    // Register the remote object in RMI registry with a given identifier
-	    Registry registry= LocateRegistry.getRegistry(); 
-	    registry.bind("ChatService", hub_stub);
+	    	// Register the remote object in RMI registry with a given identifier
+	    	Registry registry= LocateRegistry.getRegistry();
+	    	registry.bind("ChatService", hub_stub);
 
-	    System.out.println ("Server ready");
+	    	System.out.println ("Server ready");
 
 	  } catch (Exception e) {
 		  System.err.println("Error on server :" + e) ;
 		  e.printStackTrace();
 	  }
+
+		// Set up a timer for save
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+			public void run() {
+				Save();
+			}
+		}, 10000, 10000);
+
+
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			try {
+				Registry registry= LocateRegistry.getRegistry();
+				registry.unbind("ChatService");
+				UnicastRemoteObject.unexportObject(hub, true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}));
   }
+
+  static void Save(){
+	  try {
+		  FileOutputStream f = new FileOutputStream("hubsave.txt");
+		  ObjectOutputStream o = new ObjectOutputStream(f);
+
+		  o.writeObject(hub);
+
+		  o.close();
+		  f.close();
+	  } catch (IOException e) {
+		  System.out.println("Save log fail : "+e);
+	  }
+  }
+
 }
