@@ -12,7 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ChatClient {
-	static ChatRoom room = null;
+	static Room room = null;
 	static Hub hub;
 	static Registry registry;
 
@@ -79,7 +79,7 @@ public class ChatClient {
 		// Remote method invocation
 		try {
 			String roomuri = hub.GetChatRoomURL(name);
-			hub = (Hub) registry.lookup(roomuri);
+			room = (Room) registry.lookup(roomuri);
 
 		} catch (RemoteException | NotBoundException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
@@ -89,19 +89,19 @@ public class ChatClient {
 	static void Create_Room() {
         String result = (String)JOptionPane.showInputDialog(
                 Frame.getWindow(),
-                "Change your name",
-                "Name",
+                "Select the room name",
+                "New Room",
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 null,
-                Frame.getWindow().nom.getText()
+				""
         );
         if(result == null)
             return;
 		// Remote method invocation
 		try {
 			String roomuri = hub.NewChatRoom(result);
-			hub = (Hub) registry.lookup(roomuri);
+			room = (Room) registry.lookup(roomuri);
 
 		} catch (RemoteException | NotBoundException | AlreadyBoundException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));

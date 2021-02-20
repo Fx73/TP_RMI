@@ -1,4 +1,5 @@
 import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -40,8 +41,10 @@ public class ChatHub implements Hub {
     }
 
     @Override
-    public void RemoveChatRoom(String name) throws RemoteException {
-        chatlist.remove(namelist.indexOf(name));
+    public void RemoveChatRoom(String name) throws RemoteException, NotBoundException {
+        Registry registry= LocateRegistry.getRegistry();
+        registry.unbind(GetChatRoomURL(name));
+        UnicastRemoteObject.unexportObject(chatlist.remove(namelist.indexOf(name)), true);
     }
 
 }
