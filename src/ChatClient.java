@@ -23,7 +23,7 @@ public class ChatClient {
 		else
 			host = args[0];
 
-		SwingUtilities.invokeLater(() -> Frame.getWindow(host).setVisible(true));
+		SwingUtilities.invokeLater(() -> Frame.setWindow(host).setVisible(true));
 
 		try {
 			// Get remote object reference
@@ -128,8 +128,8 @@ class Frame extends JFrame {
 	public static Frame getWindow(){
 		return window == null? window = new Frame(""): window;
 	}
-	public static Frame getWindow(String name){
-		return window == null? window = new Frame(name): window;
+	public static Frame setWindow(String name){
+		return window = new Frame(name);
 	}
 
 	private final JTextArea _chattextarea = new JTextArea();
