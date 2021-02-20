@@ -61,6 +61,7 @@ public class ChatClient {
 			Frame.getWindow().set_chattextarea("Select a room or start a new one");
 		}
 		Frame.getWindow().revalidate();
+		Frame.getWindow().repaint();
 	}
 
 	static void Say(String text) {
