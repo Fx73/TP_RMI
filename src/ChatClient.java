@@ -36,7 +36,7 @@ public class ChatClient {
 				public void run() {
 					Update();
 				}
-			}, 1000, 10000);
+			}, 2000, 10000);
 
 
 		} catch (Exception e) {
@@ -65,6 +65,11 @@ public class ChatClient {
 	}
 
 	static void Say(String text) {
+		if(text.equals("")){
+			Update();
+			return;
+		}
+
 		if (room != null){
 		// Remote method invocation
 		try {
@@ -79,8 +84,7 @@ public class ChatClient {
 	static void Select_Room(String name) {
 		// Remote method invocation
 		try {
-			String roomuri = hub.GetChatRoomURL(name);
-			room = null;
+			String roomuri = hub.GetChatRoomURI(name);
 			room = (Room) registry.lookup(roomuri);
 			Update();
 
