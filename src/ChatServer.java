@@ -62,18 +62,22 @@ public class ChatServer {
 
 		  oi.close();
 		  fi.close();
+		  System.out.println("Save File found");
 	  } catch (IOException | ClassNotFoundException e) {
 		  hub = new ChatHub();
+		  System.out.println("No save found");
 	  }
+	  int i=0;
+	  try {
+	  for (i = 0; i < hub.namelist.size(); i++) {
+			Registry registry = LocateRegistry.getRegistry();
+			Room room_stub = (Room) UnicastRemoteObject.exportObject(hub.chatlist.get(i), 0);
+			registry.bind(hub.GetChatRoomURI(hub.namelist.get(i)), room_stub);
+	  }
+		  System.out.println("Successfully bound " + hub.namelist.size() + " saved rooms");
+	  }catch (RemoteException | NotBoundException | AlreadyBoundException e) {
+		  System.out.println("Error bounding saved room : " + hub.namelist.get(i));
 
-	  for (int i = 0; i < hub.namelist.size(); i++) {
-	  	try {
-			  Room room_stub = (Room) UnicastRemoteObject.exportObject(hub.chatlist.get(i), 0);
-			  Registry registry = LocateRegistry.getRegistry();
-			  registry.bind(hub.GetChatRoomURI(hub.namelist.get(i)), room_stub);
-	  	}catch (RemoteException | NotBoundException | AlreadyBoundException e) {
-				  hub = new ChatHub();
-	  	}
 	  }
 
   }
