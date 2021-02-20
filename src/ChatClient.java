@@ -79,6 +79,7 @@ public class ChatClient {
 		// Remote method invocation
 		try {
 			String roomuri = hub.GetChatRoomURL(name);
+			room = null;
 			room = (Room) registry.lookup(roomuri);
 			Update();
 

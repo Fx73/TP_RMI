@@ -47,7 +47,9 @@ public class ChatHub implements Hub {
     public void RemoveChatRoom(String name) throws RemoteException, NotBoundException {
         Registry registry= LocateRegistry.getRegistry();
         registry.unbind(GetChatRoomURL(name));
-        UnicastRemoteObject.unexportObject(chatlist.remove(namelist.indexOf(name)), true);
+        UnicastRemoteObject.unexportObject(chatlist.get(namelist.indexOf(name)), true);
+        chatlist.remove(namelist.indexOf(name));
+        namelist.remove(name);
     }
 
 }
