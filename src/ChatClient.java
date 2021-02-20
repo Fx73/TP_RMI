@@ -113,7 +113,7 @@ public class ChatClient {
 		try {
 			hub.RemoveChatRoom(room.GetRoomName());
 			room = null;
-		} catch (RemoteException e) {
+		} catch (RemoteException | NotBoundException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
 	}
