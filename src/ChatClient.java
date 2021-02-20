@@ -48,7 +48,6 @@ public class ChatClient {
 	static void Update() {
 		// Remote method invocation
 		try {
-			System.out.println(hub.GetChatRoomNumber());
 			Frame.getWindow().UpdateButtons(hub.GetChatRoomNameList());
 		} catch (RemoteException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
@@ -106,6 +105,7 @@ public class ChatClient {
 		} catch (RemoteException | NotBoundException | AlreadyBoundException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
+		Update();
 	}
 
 	static void Delete_Room() {
@@ -116,6 +116,7 @@ public class ChatClient {
 		} catch (RemoteException | NotBoundException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
+		Update();
 	}
 }
 class Frame extends JFrame {
@@ -195,6 +196,7 @@ class Frame extends JFrame {
 	public String[] buttonlist = new String[0];
 	public void UpdateButtons(String[] newbuttonlist){
 		if(Arrays.equals(buttonlist,newbuttonlist)) return;
+		System.out.println(Arrays.toString(newbuttonlist));
 		roombuttoncontainer.removeAll();
 
 		for (int i = 0; i < newbuttonlist.length; i++) {
