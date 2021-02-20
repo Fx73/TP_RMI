@@ -42,11 +42,20 @@ public class ChatServer {
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			try {
+				Save();
+
 				Registry registry= LocateRegistry.getRegistry();
 				registry.unbind("ChatService");
 				UnicastRemoteObject.unexportObject(hub, true);
-				Save();
+
+				for (int i = 0; i < hub.namelist.size(); i++) {
+					registry.unbind(hub.GetChatRoomURI(hub.namelist.get(i)));
+					UnicastRemoteObject.unexportObject(hub.chatlist.get(i), true);
+				}
+				System.out.println("Successfully unbound all");
+
 			} catch (Exception e) {
+				System.out.println("Error unbounding rooms");
 				e.printStackTrace();
 			}
 
