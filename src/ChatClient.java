@@ -194,7 +194,6 @@ class Frame extends JFrame {
 
 	public String[] buttonlist = new String[0];
 	public void UpdateButtons(String[] newbuttonlist){
-		System.out.println(newbuttonlist);
 		if(Arrays.equals(buttonlist,newbuttonlist)) return;
 		roombuttoncontainer.removeAll();
 
@@ -203,9 +202,8 @@ class Frame extends JFrame {
 			p.setLayout(new BorderLayout());
 			p.setBorder(new EmptyBorder(new Insets(3, 0, 0, 0)));
 
-			JButton b = new JButton(String.valueOf(i));
-			int finalI = i;
-			b.addActionListener(e-> ChatClient.Select_Room(newbuttonlist[finalI]));
+			JButton b = new JButton(newbuttonlist[i]);
+			b.addActionListener(e-> ChatClient.Select_Room(((JButton)e.getSource()).getName()));
 
 			p.add(b);
 			roombuttoncontainer.add(p);
