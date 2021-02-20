@@ -1,5 +1,6 @@
 
 import java.io.*;
+import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.*;
@@ -13,18 +14,7 @@ public class ChatServer {
 
 
 	public static void  main(String [] args) {
-		try {
-			FileInputStream fi = new FileInputStream("hubsave.txt");
-			ObjectInputStream oi = new ObjectInputStream(fi);
-
-			hub = (ChatHub) oi.readObject();
-
-			oi.close();
-			fi.close();
-		} catch (IOException | ClassNotFoundException e) {
-			hub = new ChatHub();
-		}
-
+		Load();
 
 		try {
 		  // Create a ChatRoom remote object
@@ -60,6 +50,31 @@ public class ChatServer {
 			}
 
 		}));
+  }
+
+  static void Load(){
+	  try {
+		  FileInputStream fi = new FileInputStream("hubsave.txt");
+		  ObjectInputStream oi = new ObjectInputStream(fi);
+
+		  hub = (ChatHub) oi.readObject();
+
+		  oi.close();
+		  fi.close();
+	  } catch (IOException | ClassNotFoundException e) {
+		  hub = new ChatHub();
+	  }
+
+	  for (int i = 0; i < hub.namelist.size(); i++) {
+	  	try {
+			  Room room_stub = (Room) UnicastRemoteObject.exportObject(hub.chatlist.get(i), 0);
+			  Registry registry = LocateRegistry.getRegistry();
+			  registry.bind(hub.GetChatRoomURI(hub.namelist.get(i)), room_stub);
+	  	}catch (RemoteException | NotBoundException | AlreadyBoundException e) {
+				  hub = new ChatHub();
+	  	}
+	  }
+
   }
 
   static void Save(){

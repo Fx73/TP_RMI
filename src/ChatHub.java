@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 public class ChatHub implements Hub, Serializable {
 
-    private final ArrayList<String> namelist = new ArrayList<>();
-    private final ArrayList<ChatRoom> chatlist = new ArrayList<>();
+    final ArrayList<String> namelist = new ArrayList<>();
+    final ArrayList<ChatRoom> chatlist = new ArrayList<>();
 
 
     @Override
