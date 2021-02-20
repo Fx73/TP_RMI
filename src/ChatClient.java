@@ -90,7 +90,7 @@ public class ChatClient {
 
 		} catch (RemoteException | NotBoundException e) {
 			e.printStackTrace();
-			//Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
+			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
 		}
 	}
 
@@ -203,6 +203,7 @@ class Frame extends JFrame {
 	}
 
 	public void set_chattextarea(String area){
+		System.out.println(area);
 		_chattextarea.setText(area);
 		Frame.getWindow().revalidate();
 	}
