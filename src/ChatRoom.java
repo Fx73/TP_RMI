@@ -2,11 +2,11 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 
 public class ChatRoom implements Room, Serializable {
-    String _chatlog;
+    ChatLog _chatlog;
     String _name;
-    ChatRoom(String name, String chatlog){
+    ChatRoom(String name){
         _name = name;
-        _chatlog = chatlog;
+        _chatlog = new ChatLog(100);
     }
 
     public String GetRoomName() throws RemoteException{
@@ -14,10 +14,10 @@ public class ChatRoom implements Room, Serializable {
     }
 
     public void Say(String name, String s) throws RemoteException {
-        _chatlog += "\n <" + name + ">\n" + s+"\n";
+        _chatlog.Add_log(name,s);
     }
 
     public String Get_chatlog() throws RemoteException{
-        return _chatlog;
+        return _chatlog.Get_Logs();
     }
 }

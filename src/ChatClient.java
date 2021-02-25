@@ -41,6 +41,7 @@ public class ChatClient {
 
 		} catch (Exception e) {
 			Frame.getWindow().set_chattextarea("Error on client: " + e);
+
 		}
 	}
 

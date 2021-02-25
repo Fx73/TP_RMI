@@ -35,7 +35,7 @@ public class ChatHub implements Hub, Serializable {
         if(namelist.contains(name))
             throw new AlreadyBoundException("A room already exists with name : " + name);
 
-        ChatRoom newchat = new ChatRoom(name, "");
+        ChatRoom newchat = new ChatRoom(name);
         chatlist.add(newchat);
         namelist.add(name);
 
