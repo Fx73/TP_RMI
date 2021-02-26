@@ -6,5 +6,5 @@ compile :
 
 test:
 	rmiregistry &
-	xterm java ChatServer &
-	xterm java ChatClient $(TARGET) &
+	gnome-terminal --execute java ChatServer &
+	gnome-terminal --execute java ChatClient $(TARGET) &

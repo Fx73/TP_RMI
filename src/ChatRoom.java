@@ -35,7 +35,7 @@ public class ChatRoom implements Room, Serializable {
             public void run() {
                 AutoUnregister_User(name);
             }
-        }, 10000, 20000);
+        }, 20000);
 
         if(users.contains(name)){
             timers.set(users.indexOf(name),timer);
