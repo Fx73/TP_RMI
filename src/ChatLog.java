@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ChatLog {
+public class ChatLog implements Serializable {
     public int MAXSIZE;
     private ArrayList<Message> log = new ArrayList<>();
 
@@ -27,7 +28,7 @@ public class ChatLog {
 
 }
 
-class Message{
+class Message implements Serializable{
     String user;
     String msg;
 

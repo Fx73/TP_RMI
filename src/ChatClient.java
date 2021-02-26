@@ -7,6 +7,7 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.*;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -38,6 +39,13 @@ public class ChatClient {
 				}
 			}, 2000, 10000);
 
+			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+				try {
+					if(room!=null)room.Unregister_User(Frame.getWindow().user.getText());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}));
 
 		} catch (Exception e) {
 			Frame.getWindow().set_chattextarea("Error on client: " + e);
@@ -259,7 +267,7 @@ class Frame extends JFrame {
 			JTextField t = new JTextField(newnamelist[i]);
 
 			p.add(t);
-			roombuttoncontainer.add(p);
+			roomnamecontainer.add(p);
 		}
 		buttonlist = newnamelist;
 		pack();
