@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -7,8 +8,8 @@ import java.util.TimerTask;
 public class ChatRoom implements Room, Serializable {
     ChatLog _chatlog;
     String _name;
-    transient final ArrayList<String> users = new ArrayList<>();
-    transient final ArrayList<Timer> timers = new ArrayList<>();
+    transient ArrayList<String> users = new ArrayList<>();
+    transient ArrayList<Timer> timers = new ArrayList<>();
 
     ChatRoom(String name){
         _name = name;
@@ -59,4 +60,11 @@ public class ChatRoom implements Room, Serializable {
         Unregister_User(name);
         return null;
     }
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        users = new ArrayList<>();
+        timers = new ArrayList<>();
+    }
+
 }
