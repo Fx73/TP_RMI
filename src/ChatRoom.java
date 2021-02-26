@@ -46,7 +46,9 @@ public class ChatRoom implements Room, Serializable {
     }
 
     public void Unregister_User(String name){
-        timers.remove(users.indexOf(name));
+        int i = users.indexOf(name);
+        timers.get(i).cancel();
+        timers.remove(i);
         users.remove(name);
     }
     public String[] Get_Users(){
