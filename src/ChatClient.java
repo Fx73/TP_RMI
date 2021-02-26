@@ -54,6 +54,7 @@ public class ChatClient {
 		}
 		if (room != null) {
 			try {
+				Frame.getWindow().UpdateNames(room.Get_Users());
 				Frame.getWindow().set_chattextarea(room.Get_chatlog());
 			} catch (RemoteException e) {
 				Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
@@ -74,7 +75,7 @@ public class ChatClient {
 		if (room != null){
 		// Remote method invocation
 		try {
-			room.Say(Frame.getWindow().nom.getText(), text);
+			room.Say(Frame.getWindow().user.getText(), text);
 			Update();
 		} catch (RemoteException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
@@ -86,7 +87,9 @@ public class ChatClient {
 		// Remote method invocation
 		try {
 			String roomuri = hub.GetChatRoomURI(name);
+			if(room!=null)room.Unregister_User(Frame.getWindow().user.getText());
 			room = (Room) registry.lookup(roomuri);
+			room.Register_User(Frame.getWindow().user.getText());
 			Update();
 
 		} catch (RemoteException | NotBoundException e) {
@@ -109,9 +112,8 @@ public class ChatClient {
             return;
 		// Remote method invocation
 		try {
-			String roomuri = hub.NewChatRoom(result);
-			room = (Room) registry.lookup(roomuri);
-			Update();
+			hub.NewChatRoom(result);
+			Select_Room(result);
 
 		} catch (RemoteException | NotBoundException | AlreadyBoundException e) {
 			Frame.getWindow().set_chattextarea(Arrays.toString(e.getStackTrace()));
@@ -142,8 +144,10 @@ class Frame extends JFrame {
 	private final JTextArea _chattextarea = new JTextArea();
 	private final JTextArea _messagearea = new JTextArea();
 	private final JPanel roombuttoncontainer = new JPanel();
-	public JTextField nom;
+    private final JPanel roomnamecontainer = new JPanel();
 
+    public JTextField user;
+	private final JTextPane usersconnected = new JTextPane();
 
 	private Frame(String target) {
 		super("RMI Chat : "+target);
@@ -159,28 +163,41 @@ class Frame extends JFrame {
 			_messagearea.setText("");
 		});
 		buttonsay.setMinimumSize(new Dimension(40, 40));
-		final JSplitPaneWithZeroSizeDivider chatpane = new JSplitPaneWithZeroSizeDivider(JSplitPane.HORIZONTAL_SPLIT,buttonsay,_messagearea);
-		chatpane.setResizeWeight(0.1);
-		chatpane.setEnabled(false);
+		final JSplitPaneWithZeroSizeDivider saypane = new JSplitPaneWithZeroSizeDivider(JSplitPane.HORIZONTAL_SPLIT,buttonsay,_messagearea);
+		saypane.setResizeWeight(0.1);
+		saypane.setEnabled(false);
 
 		//Zone de dialogue
 		_chattextarea.setEditable(false);
 		_chattextarea.setLineWrap(true);
-		final JSplitPaneWithZeroSizeDivider textpane = new JSplitPaneWithZeroSizeDivider(JSplitPane.VERTICAL_SPLIT,new JScrollPane(_chattextarea),chatpane);
-		textpane.setResizeWeight(1);
+		final JSplitPaneWithZeroSizeDivider chatpane = new JSplitPaneWithZeroSizeDivider(JSplitPane.HORIZONTAL_SPLIT,new JScrollPane(_chattextarea),roomnamecontainer);
+		chatpane.setResizeWeight(1);
+		final JSplitPaneWithZeroSizeDivider rightpane = new JSplitPaneWithZeroSizeDivider(JSplitPane.VERTICAL_SPLIT,chatpane,saypane);
+		rightpane.setResizeWeight(1);
 
+
+
+		//panel de droite
+        roombuttoncontainer.setLayout(new BoxLayout(roombuttoncontainer, BoxLayout.Y_AXIS));
+        roombuttoncontainer.setBorder(new EmptyBorder(new Insets(3, 3, 2000, 3)));
+		usersconnected.setContentType("text/html");
+		usersconnected.setText("<html><center><b>Connected\n<br>\nUsers</b></center></html>");
+		usersconnected.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		usersconnected.setEnabled(false);
+
+        roomnamecontainer.add(usersconnected);
 
 
 
 		//Pannel de gauche
-		nom = new JTextField();
-		nom.setText(System.getProperty("user.name"));
-		nom.setHorizontalAlignment(JTextField.CENTER);
-		nom.setEnabled(false);
-		nom.addMouseListener(nommouselistener);
+		user = new JTextField();
+		user.setText(System.getProperty("user.name"));
+		user.setHorizontalAlignment(JTextField.CENTER);
+		user.setEnabled(false);
+		user.addMouseListener(nommouselistener);
 		roombuttoncontainer.setLayout(new BoxLayout(roombuttoncontainer, BoxLayout.Y_AXIS));
 		roombuttoncontainer.setBorder(new EmptyBorder(new Insets(3, 3, 2000, 3)));
-		final JSplitPaneWithZeroSizeDivider roompane = new JSplitPaneWithZeroSizeDivider(JSplitPane.VERTICAL_SPLIT,nom,roombuttoncontainer);
+		final JSplitPaneWithZeroSizeDivider roompane = new JSplitPaneWithZeroSizeDivider(JSplitPane.VERTICAL_SPLIT, user,roombuttoncontainer);
 
 
 		//Panel + et -
@@ -193,7 +210,7 @@ class Frame extends JFrame {
 
 		final JSplitPaneWithZeroSizeDivider leftpane = new JSplitPaneWithZeroSizeDivider(JSplitPane.VERTICAL_SPLIT,roompane,toolpane);
 		leftpane.setResizeWeight(1);
-		final JSplitPaneWithZeroSizeDivider mainpane = new JSplitPaneWithZeroSizeDivider(JSplitPane.HORIZONTAL_SPLIT,leftpane,textpane);
+		final JSplitPaneWithZeroSizeDivider mainpane = new JSplitPaneWithZeroSizeDivider(JSplitPane.HORIZONTAL_SPLIT,leftpane,rightpane);
 		mainpane.setResizeWeight(0.05);
 		mainpane.setEnabled(false);
 
@@ -228,6 +245,26 @@ class Frame extends JFrame {
 		pack();
 	}
 
+	public String[] namelist = new String[0];
+	public void UpdateNames(String[] newnamelist){
+		if(Arrays.equals(buttonlist,newnamelist)) return;
+		roomnamecontainer.removeAll();
+		roomnamecontainer.add(usersconnected);
+
+		for (int i = 0; i < newnamelist.length; i++) {
+			JPanel p = new JPanel();
+			p.setLayout(new BorderLayout());
+			p.setBorder(new EmptyBorder(new Insets(3, 0, 0, 0)));
+
+			JTextField t = new JTextField(newnamelist[i]);
+
+			p.add(t);
+			roombuttoncontainer.add(p);
+		}
+		buttonlist = newnamelist;
+		pack();
+	}
+
 	MouseListener nommouselistener = new MouseListener() {
 		@Override
 		public void mouseClicked(MouseEvent e) {
@@ -238,11 +275,11 @@ class Frame extends JFrame {
 					JOptionPane.PLAIN_MESSAGE,
 					null,
 					null,
-					Frame.getWindow().nom.getText()
+					Frame.getWindow().user.getText()
 			);
 
 			if(result != null)
-				Frame.getWindow().nom.setText(result);
+				Frame.getWindow().user.setText(result);
 		}
 
 		@Override
