@@ -95,8 +95,8 @@ public class ChatClient {
 	static void Select_Room(String name) {
 		// Remote method invocation
 		try {
-			String roomuri = hub.GetChatRoomURI(name);
 			if(room!=null)room.Unregister_User(Frame.getWindow().user.getText());
+			String roomuri = hub.GetChatRoomURI(name);
 			room = (Room) registry.lookup(roomuri);
 			Update();
 

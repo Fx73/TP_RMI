@@ -48,6 +48,10 @@ public class ChatRoom implements Room, Serializable {
 
     public void Unregister_User(String name){
         int i = users.indexOf(name);
+        if(i == -1){
+            System.out.println("Skipping failed unregister for " + name);
+            return;
+        }
         timers.get(i).cancel();
         timers.remove(i);
         users.remove(name);
