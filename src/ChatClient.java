@@ -7,7 +7,6 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.*;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -193,6 +192,8 @@ class Frame extends JFrame {
 		usersconnected.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		usersconnected.setEnabled(false);
 
+		roomnamecontainer.setLayout(new BoxLayout(roombuttoncontainer, BoxLayout.Y_AXIS));
+		roomnamecontainer.setBorder(new EmptyBorder(new Insets(3, 3, 2000, 3)));
         roomnamecontainer.add(usersconnected);
 
 
@@ -265,6 +266,7 @@ class Frame extends JFrame {
 			p.setBorder(new EmptyBorder(new Insets(3, 0, 0, 0)));
 
 			JTextField t = new JTextField(newnamelist[i]);
+			t.setForeground(Color.BLUE);
 
 			p.add(t);
 			roomnamecontainer.add(p);
