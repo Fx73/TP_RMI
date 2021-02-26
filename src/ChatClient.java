@@ -62,6 +62,7 @@ public class ChatClient {
 		}
 		if (room != null) {
 			try {
+				room.Register_User(Frame.getWindow().user.getText());
 				Frame.getWindow().UpdateNames(room.Get_Users());
 				Frame.getWindow().set_chattextarea(room.Get_chatlog());
 			} catch (RemoteException e) {
@@ -97,7 +98,6 @@ public class ChatClient {
 			String roomuri = hub.GetChatRoomURI(name);
 			if(room!=null)room.Unregister_User(Frame.getWindow().user.getText());
 			room = (Room) registry.lookup(roomuri);
-			room.Register_User(Frame.getWindow().user.getText());
 			Update();
 
 		} catch (RemoteException | NotBoundException e) {
