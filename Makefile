@@ -5,6 +5,6 @@ compile :
 	javac src/*.java
 
 test:
-	#gnome-terminal --execute rmiregistry &
-	gnome-terminal --execute java src/ChatServer &
-	gnome-terminal --execute java src/ChatClient $(TARGET) &
+	cd src && gnome-terminal --execute rmiregistry 
+	cd src && gnome-terminal --execute java ChatServer 
+	cd src && gnome-terminal --execute java ChatClient $(TARGET)
