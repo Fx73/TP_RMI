@@ -14,24 +14,24 @@ public class ChatHub implements Hub, Serializable {
 
 
     @Override
-    public int GetChatRoomNumber() throws RemoteException {
+    public synchronized  int GetChatRoomNumber() throws RemoteException {
         return chatlist.size();
     }
 
     @Override
-    public String[] GetChatRoomNameList() throws RemoteException {
+    public synchronized String[] GetChatRoomNameList() throws RemoteException {
         return namelist.toArray(new String[0]);
     }
 
     @Override
-    public String GetChatRoomURI(String name) throws RemoteException, NotBoundException {
+    public synchronized  String GetChatRoomURI(String name) throws RemoteException, NotBoundException {
         if(!namelist.contains(name))
             throw new NotBoundException("There is no room with this name : " + name);
         return "Room_"+name+"_Service";
     }
 
     @Override
-    public String NewChatRoom(String name) throws RemoteException, AlreadyBoundException, NotBoundException {
+    public synchronized String NewChatRoom(String name) throws RemoteException, AlreadyBoundException, NotBoundException {
         if(namelist.contains(name))
             throw new AlreadyBoundException("A room already exists with name : " + name);
 
@@ -47,7 +47,7 @@ public class ChatHub implements Hub, Serializable {
     }
 
     @Override
-    public void RemoveChatRoom(String name) throws RemoteException, NotBoundException {
+    public synchronized void RemoveChatRoom(String name) throws RemoteException, NotBoundException {
         Registry registry= LocateRegistry.getRegistry();
         registry.unbind(GetChatRoomURI(name));
         UnicastRemoteObject.unexportObject(chatlist.get(namelist.indexOf(name)), true);

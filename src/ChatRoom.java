@@ -20,15 +20,15 @@ public class ChatRoom implements Room, Serializable {
         return _name;
     }
 
-    public void Say(String name, String s) throws RemoteException {
+    public synchronized void Say(String name, String s) throws RemoteException {
         _chatlog.Add_log(name,s);
     }
 
-    public String Get_chatlog() throws RemoteException{
+    public synchronized String Get_chatlog() throws RemoteException{
         return _chatlog.Get_Logs();
     }
 
-    public void Register_User(String name){
+    public synchronized void Register_User(String name){
         Timer timer = new Timer(name);
         timer.schedule(new TimerTask() {
             @Override
@@ -46,7 +46,7 @@ public class ChatRoom implements Room, Serializable {
         }
     }
 
-    public void Unregister_User(String name){
+    public synchronized  void Unregister_User(String name){
         int i = users.indexOf(name);
         if(i == -1){
             System.out.println("Skipping failed unregister for " + name);
@@ -56,7 +56,7 @@ public class ChatRoom implements Room, Serializable {
         timers.remove(i);
         users.remove(name);
     }
-    public String[] Get_Users(){
+    public synchronized String[] Get_Users(){
         return users.toArray(new String[0]);
     }
 
