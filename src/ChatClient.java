@@ -141,8 +141,8 @@ public class ChatClient {
 }
 class Frame extends JFrame {
 	private static Frame window = null;
-	public static Frame getWindow(){
-		return window == null? window = new Frame(""): window;
+	public static Frame getWindow() {
+		if (window == null) {System.out.println("Frame is missing");System.exit(1);} return window;
 	}
 	public static Frame setWindow(String name){
 		return window = new Frame(name);
@@ -192,7 +192,7 @@ class Frame extends JFrame {
 		usersconnected.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		usersconnected.setEnabled(false);
 
-		roomnamecontainer.setLayout(new BoxLayout(roombuttoncontainer, BoxLayout.Y_AXIS));
+		roomnamecontainer.setLayout(new BoxLayout(roomnamecontainer, BoxLayout.Y_AXIS));
 		roomnamecontainer.setBorder(new EmptyBorder(new Insets(3, 3, 2000, 3)));
         roomnamecontainer.add(usersconnected);
 
