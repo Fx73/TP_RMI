@@ -142,9 +142,21 @@ public class ChatClient {
 class Frame extends JFrame {
 	private static Frame window = null;
 	public static Frame getWindow() {
-		if (window == null) {System.out.println("Frame is missing");System.exit(1);} return window;
+		int timeout = 10;
+		while (window == null) {
+		try{
+		Thread.sleep(2000);
+		timeout --;
+		}catch(Exception e){
+		}
+		if(timeout <=0){
+		
+		System.out.println("Frame is missing");
+		System.exit(1);}}
+		 return window;
 	}
 	public static Frame setWindow(String name){
+			System.out.println("Building Frame ...");
 		return window = new Frame(name);
 	}
 
@@ -158,7 +170,6 @@ class Frame extends JFrame {
 
 	private Frame(String target) {
 		super("RMI Chat : "+target);
-		System.out.println("Building Frame ...");
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setPreferredSize(new Dimension(1000,600));
