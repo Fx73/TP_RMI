@@ -158,6 +158,8 @@ class Frame extends JFrame {
 
 	private Frame(String target) {
 		super("RMI Chat : "+target);
+		System.out.println("Building Frame ...");
+
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setPreferredSize(new Dimension(1000,600));
 
